@@ -3,7 +3,16 @@ set -e
 
 cd /var/www/html
 
-# Pastikan direktori Laravel tersedia
+# Gunakan port yang diberikan Hostless
+PORT="${PORT:-8080}"
+
+# Sesuaikan port Nginx
+sed "s/listen 10000;/listen ${PORT};/" \
+    /etc/nginx/http.d/default.conf > /tmp/default.conf
+
+cp /tmp/default.conf /etc/nginx/http.d/default.conf
+
+# Siapkan direktori Laravel
 mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
@@ -11,16 +20,15 @@ mkdir -p \
     storage/logs \
     bootstrap/cache
 
-# Atur permission
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# Jalankan migrasi database yang belum diterapkan
+# Jalankan migration
 php artisan migrate --force
 
-# Optimasi konfigurasi Laravel
+# Optimasi Laravel
 php artisan config:cache
 php artisan view:cache
 
-# Jalankan Nginx dan PHP-FPM melalui Supervisor
+# Jalankan server
 exec /usr/bin/supervisord -c /etc/supervisord.conf
