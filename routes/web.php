@@ -10,6 +10,8 @@ use App\Http\Controllers\ProductIngredientController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\DashboardController;
 
+Route::redirect('/', '/login');
+
 // Halaman login untuk pengguna yang belum login
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])
