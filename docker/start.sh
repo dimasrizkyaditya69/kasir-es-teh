@@ -4,7 +4,7 @@ set -e
 cd /var/www/html
 
 # Gunakan port yang diberikan Hostless
-PORT="${PORT:-8080}"
+PORT="${PORT:-3000}"
 
 # Sesuaikan port Nginx
 sed "s/listen 10000;/listen ${PORT};/" \
